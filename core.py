@@ -21,6 +21,7 @@ formats, (i.e, flashcards, csv, txt, etc). The following games are currently sup
 
 sheet_data = [];
 csv_data = [];
+xlsx_data = [];
 row_count = [];
 audio_files = [];
 supportedFormats = ['txt', 'csv']
@@ -35,82 +36,85 @@ def convertFromCSV(inputFile, game, language):
 	sheet = wb[wb.sheetnames[0]]
 	ignore_types = ['GenericDialgoueWounded', 'DialogueGiant', 'VoicePowers']
 	responseGames = {
-		'Skyrim': {'RESPONSE TEXT': '', 'QUEST': '', 'FULLPATH': '', 'FILENAME': ''}
+		'Skyrim': {'RESPONSE TEXT': '', 'QUEST': '', 'FULL PATH': '', 'FILENAME': ''}
 	}
 	
-	for getColumns in range(1, sheet.max_column):
-		if sheet.cell(row=1, column=getColumns).value in responseGames['Skyrim']:
-			responseGames['Skyrim'][sheet.cell(row=1, column=getColumns).value] = getColumns;
-	
+	def getColumnsRows():
+		for getColumns in range(1, sheet.max_column):
+			if sheet.cell(row=1, column=getColumns).value == 'FULLPATH':
+					responseGames[game]['FULL PATH'] = getColumns;
+			else:
+				if sheet.cell(row=1, column=getColumns).value in responseGames[game]:
+					responseGames[game][sheet.cell(row=1, column=getColumns).value] = getColumns;
+		
+	getColumnsRows()
 	abr = language[:2].upper()
 	# Loop through audio filenames
 	for getAudioNames in range(1, sheet.max_row):
 		skip = 0;
 		try:
-			voice_types = list(filter(lambda plc_var: plc_var in sheet.cell(row=getAudioNames, column=responseGames['Skyrim']['QUEST']).value, ignore_types));
+			voice_types = list(filter(lambda plc_var: plc_var in sheet.cell(row=getAudioNames, column=responseGames[game]['QUEST']).value, ignore_types));
 			skip = len(voice_types)
 		except TypeError:
 			pass
 			
 		if skip == 0: # Only skip if current row is one of the ignored types
-			csvData[sheet.cell(row=getAudioNames, column=responseGames['Skyrim']['FULLPATH']).value] = '[sound:' + sheet.cell(row=getAudioNames, column=responseGames['Skyrim']['FILENAME']).value.lower() + '_' + abr + '.wav] ' + sheet.cell(row=getAudioNames, column=responseGames['Skyrim']['RESPONSE TEXT']).value
-			audio_files.append(sheet.cell(row=getAudioNames, column=responseGames['Skyrim']['FILENAME']).value.lower() + '.fuz');
+			csvData[sheet.cell(row=getAudioNames, column=responseGames['Skyrim']['FULL PATH']).value] = '[sound:' + sheet.cell(row=getAudioNames, column=responseGames[game]['FILENAME']).value.lower() + '_' + abr + '.wav] ' + sheet.cell(row=getAudioNames, column=responseGames[game]['RESPONSE TEXT']).value
+			audio_files.append(sheet.cell(row=getAudioNames, column=responseGames[game]['FILENAME']).value.lower() + '.fuz');
 			
 		
 	csv_data.append(csvData);
-def convertFromXLSX(inputFile, game, count):
+def convertFromXLSX(inputFile, game, count, language):
 	global sheet_data;
 	global row_count;
+	xlsxData = {};
 	wb = openpyxl.load_workbook(inputFile)
 	sheet = wb[wb.sheetnames[0]]
-	
-	# Check if sheet cell carries the proper name (For validation reasons)
-	
-	responseGames = {
-		'Skyrim': ['RESPONSE TEXT', 21, 7, 15], # Numbers = column count
-		'Fallout 4': ['Two', 21, 7, 15] # Placeholder
-	}
-		
-	response_text = responseGames[game][0];
-	column_count = responseGames[game][1];
-	quest_type = responseGames[game][2];
-	audio_type = responseGames[game][3];
-	
 	ignore_types = ['GenericDialgoueWounded', 'DialogueGiant', 'VoicePowers']
-	if sheet.cell(row=1, column=column_count).value != response_text:
-		# Look for the column that carries the specified name
-		for i in range (1, sheet.max_column):
-			if sheet.cell(row=1, column=i).value == response_text:
-				column_count = i;
+	# Check if sheet cell carries the proper name (For validation reasons)
+
+	responseGames = {
+		'Skyrim': {'RESPONSE TEXT': '', 'QUEST': '', 'FULL PATH': '', 'FILENAME': ''}
+	}
+
+	abr = language[:2].upper()
 	
-	counted_arr = 0;
+	for getColumns in range(1, sheet.max_column):
+		if sheet.cell(row=1, column=getColumns).value in responseGames[game]:
+			responseGames[game][sheet.cell(row=1, column=getColumns).value] = getColumns;
+
 	for i in range (1, sheet.max_row + 1):
 		try:
-			if len(sheet.cell(row=i, column=column_count).value.strip()) != 0:		
-				if sheet.cell(row=i, column=quest_type - count).value not in ignore_types:
+			skip = 0;
+			try:
+				voice_types = list(filter(lambda plc_var: plc_var in sheet.cell(row=i, column=responseGames[game]['QUEST']).value, ignore_types));
+				skip = len(voice_types)
+			except TypeError:
+				pass
 				
-					#if len(list(filter(lambda plc_var: plc_var in sheet.cell(row=i, column=3).value, ignore_types))) == 0:
-						# Checks if NPC is Male or Lady
-						# if 'female' in sheet.cell(row=i, column=6).value.lower():
-							# print('FEMALE');
-						# elif 'male' in sheet.cell(row=i, column=6).value.lower():
-							# print('MALE');
-					if count > 0: # if second language...
-						for x in row_count:
-							sheet_data[counted_arr].append(sheet.cell(row=x, column=column_count).value)
-							counted_arr += 1;
-						return True;
-					else:
-						sheet_data.append([sheet.cell(row=i, column=column_count).value])
-						row_count.append(i);
-						audio_files.append(sheet.cell(row=i, column=audio_type).value); # Append the audio filenames from file
+			#if len(list(filter(lambda plc_var: plc_var in sheet.cell(row=i, column=3).value, ignore_types))) == 0:
+				# Checks if NPC is Male or Lady
+				# if 'female' in sheet.cell(row=i, column=6).value.lower():
+					# print('FEMALE');
+				# elif 'male' in sheet.cell(row=i, column=6).value.lower():
+					# print('MALE');
 
+			try:
+				xlsxData[sheet.cell(row=i, column=responseGames[game]['FULL PATH']).value] = '[sound:' + sheet.cell(row=i, column=responseGames[game]['FILENAME']).value.lower() + '_' + abr + '.wav] ' + sheet.cell(row=i, column=responseGames[game]['RESPONSE TEXT']).value
+			except TypeError:
+				pass
+				
+			try:
+				audio_files.append(sheet.cell(row=i, column=responseGames[game]['FILENAME']).value); # Append the audio filenames from file
+			except TypeError:
+				pass
 		except (AttributeError, IndexError):
 			pass;
-
-def convert2(inputFile, game):
-	rn = game.gamePath()
 	
+	xlsx_data.append(xlsxData);
+def convert2(inputFile, game, encoding=0):
+	rn = game.gamePath()
+	filename, fileExt = os.path.splitext(inputFile)
 	input_file = inputFile
 	# Example: 'Skyrim_DialogueExport_Spanish_0'
 	output_file = game.gamePath() + '_DialogueExport_' + game.language + '.xlsx'
@@ -131,12 +135,17 @@ def convert2(inputFile, game):
 			
 	wb = openpyxl.Workbook()
 	ws = wb.worksheets[0]
+	encoding_type = 'UTF-8';
+	
+	if fileExt == '.xlsx' or encoding != 0:
+		encoding_type = 'ISO-8859-1';
 
 	try:
-		with open(input_file, 'r', encoding="ISO-8859-1") as data:
+		with open(input_file, 'r', encoding=encoding_type) as data:
 			reader = csv.reader(data, delimiter='\t')
 			print('Writing to file...');
-			def appendRows(c=0):
+			def appendRows(c=0, error_count=0):
+				errorCount = error_count;
 				count = c;
 				try:	
 					for row in reader:
@@ -145,9 +154,12 @@ def convert2(inputFile, game):
 					wb.save('dialogues/' + output_file)
 					return 'dialogues/' + output_file;
 				except Exception as e:
-					return appendRows(count);
+					errorCount += 1;
+					if errorCount > 10:
+						return False;
+					return appendRows(count, errorCount);
 				
-			appendRows()
+			res = appendRows();
 	except FileNotFoundError:
 		# Check dialogues folder if conditions are met
 		if os.path.exists('dialogues/' + input_file):
@@ -155,8 +167,10 @@ def convert2(inputFile, game):
 		else:
 			print('Couldnt find file at ' + input_file + '!');
 			return False;
-
-	return 'dialogues/' + output_file;
+	if res != False:
+		return 'dialogues/' + output_file;
+	else:
+		return convert2(inputFile, game, encoding='ISO-8859-1')
 def support(print_games=False, game='', language=''):
 	# * Chinese = Traditional Chinese
 	supportedGameDict = {'Fallout 4': [['fallout 4', 'f4', 'fallout4'],
@@ -185,7 +199,6 @@ def support(print_games=False, game='', language=''):
 				if sum(check) == 2:
 					return True;
 				else:
-					print(language[check.index(0)]);
 					return language[check.index(0)]; # Returns the non-supported language
 				
 			return i;
@@ -219,6 +232,7 @@ def core(game, language, type, file, format, audio, create=False):
 	global sheet_data;
 	global audio_files;
 	global csv_data;
+	global xlsx_data;
 	files = file;
 	game_class = games(game=game, language=language)
 	# This path is currently for testing purposes
@@ -281,7 +295,7 @@ def core(game, language, type, file, format, audio, create=False):
 		if fileExt == '.csv':
 			convertFromCSV(output_files[i], g_c.gamePath(), language[i]);
 		elif fileExt == '.txt' or fileExt == '.xlsx':
-			convertFromXLSX(output_files[i], g_c.gamePath(), i);
+			convertFromXLSX(output_files[i], g_c.gamePath(), i, language[i]);
 			
 	# Remove the leftover XLSX file(s)
 	# Confirm output_files are xlsx files
@@ -294,21 +308,28 @@ def core(game, language, type, file, format, audio, create=False):
 				os.remove(checkFiles);
 
 	file_name = game_class.gamePath() + '_Dialogue_' + '_'.join(language)
+	mainData = ''
 	
 	if fileExt == '.csv':
-		c_data = [];
-		count = 0;
-		for x in csv_data: # language 1, language 2
-			for i in x.keys():
-				# Find name of key in other dict
-				try:
-					c_data.append([csv_data[0][i], csv_data[1][i]])
-				except KeyError:
-					pass
-				count += 1;
-			sheet_data = c_data;
-			break;
-	
+		mainData = csv_data;
+	elif fileExt == '.xlsx' or fileExt == '.txt':
+		mainData = xlsx_data;
+		
+		
+	c_data = [];
+	count = 0;
+
+	for x in mainData: # language 1, language 2
+		for i in x.keys():
+			# Find name of key in other dict
+			try:
+				c_data.append([mainData[0][i], mainData[1][i]])
+			except KeyError:
+				pass
+			count += 1;
+		sheet_data = c_data;
+		break;
+			
 	# remove duplicates
 	def removeDuplicates(sheet, language):
 		data = [];
@@ -333,8 +354,21 @@ def core(game, language, type, file, format, audio, create=False):
 	if format.lower() == 'csv':
 		with open(file_name + '.csv', 'w', encoding='utf-8') as csv_export:
 			csv_writer = csv.writer(csv_export, delimiter='\t');
+			# Find [Sound:, and ending ] indexes
+			a_count = 0;
 			for i in removeDuplicates(sheet_data, language):
+				def removeAudio(string_of):
+					try:
+						x = string_of.index(']');
+						return string_of[x + 2:]
+					except ValueError:
+						return string_of;
+				for rows in range(0, len(i)):
+					i[rows] = removeAudio(i[rows]);
+					
+				i.append(audio_files[a_count].lower())
 				csv_writer.writerow(i)
+				a_count += 1;
 
 	
 	# If audio is not False
@@ -424,7 +458,6 @@ def main():
 	else:
 		args.game = args.game[0]
 	
-	
 	if len(args.language) < 2:
 		print('Note: Only %s language(s) stated! Please use more than one language, (i.e English Spanish)' % len(args.file));
 		return False
@@ -455,4 +488,3 @@ def main():
 	
 if __name__ == '__main__':
 	main()
-
