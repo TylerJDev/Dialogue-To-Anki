@@ -388,7 +388,13 @@ def core(game, language, type, file, format, audio, create=False):
 	
 	# If audio is not False
 	if audio:
-		print('Looking for ' + str(audio[0]) + ' file in Dialogue_To_Anki/audio/...');
+		print('Looking for ' + str(audio[0]) + ' file in audio/...');
+		
+		# Create the audio/ folder
+		# Confirm if it exists already or not
+		if not os.path.exists('audio/'):
+			os.makedirs('audio')
+			
 		# Look for a file named what was passed to the --audio argument
 		folders = os.listdir('audio/');
 		main_folder = '';
