@@ -8,9 +8,9 @@ formats, (i.e, flashcards, csv, txt, etc). The following games are currently sup
 	- Skyrim
 	- Skyrim SE
 	- Fallout 4
-				
+	- Fallout NV
+	
 	Games that /may/ work:
-		- Fallout NV
 		- Fallout 3
 		- Oblivion
 	
@@ -72,9 +72,12 @@ def convertFromXLSX(inputFile, game, count, language):
 	sheet = wb[wb.sheetnames[0]]
 	ignore_types = ['GenericDialgoueWounded', 'DialogueGiant', 'VoicePowers']
 	# Check if sheet cell carries the proper name (For validation reasons)
-
+	
+	# Response Text = The main dialogue, Quest = Types to ignore (For Skyrim this is the 'Quest' column, Full Path = Path to audio, Filename = name of audio file
 	responseGames = {
-		'Skyrim': {'RESPONSE TEXT': '', 'QUEST': '', 'FULL PATH': '', 'FILENAME': ''}
+		'Skyrim': {'RESPONSE TEXT': '', 'QUEST': '', 'FULL PATH': '', 'FILENAME': ''},
+		'Fallout New Vegas': {'RESPONSE TEXT': '', 'QUEST': '', 'FULL PATH': '', 'FILENAME': ''},
+		'Fallout 4': {'RESPONSE TEXT': '', 'QUEST': '', 'FULL PATH': '', 'FILENAME': ''}
 	}
 
 	abr = language[:2].upper()
@@ -173,12 +176,15 @@ def convert2(inputFile, game, encoding=0):
 		return convert2(inputFile, game, encoding='ISO-8859-1')
 def support(print_games=False, game='', language=''):
 	# * Chinese = Traditional Chinese
-	supportedGameDict = {'Fallout 4': [['fallout 4', 'f4', 'fallout4'],
+	supportedGameDict = {'Fallout 4': [['fallout 4', 'f4', 'fallout4'], # Words that will translate to the games offical title (i.e, -g f4 > Fallout 4) 
 	{'English': {'audio': True}, 'French': {'audio': True}, 'Italian': {'audio': True}, 'German': {'audio': True}, 'Spanish': {'audio': True}, 'Polish': {'audio': False}, 'Portuguese-Brazil': {'audio': False}, 'Russian': {'audio': False}, 'Chinese': {'audio': False}, 'Japanese': {'audio': True}}
 	], 
-	'Skyrim': [['skyrim', 'skyrim se', 'skyrim special edition'], 
+	'Skyrim': [['skyrim', 'skyrim se', 'skyrim special edition', 'sky'], 
 	{'English': {'audio': True}, 'French': {'audio': True}, 'Italian': {'audio': True}, 'German': {'audio': True}, 'Spanish': {'audio': True}, 'Polish': {'audio': True}, 'Chinese':
 	{'audio': False, 'support': 'skyrim_se'}, 'Russian': {'audio': True}, 'Japanese': {'audio': True}, 'Czech': {'audio': True, 'support': 'skyrim'}}
+	],
+	'Fallout New Vegas': [['fnv', 'fallout new vegas', 'fallout nv'], 
+	{'English': {'audio': True}, 'French': {'audio': True}, 'Italian': {'audio': True}, 'German': {'audio': True}, 'Spanish': {'audio': True}}
 	]}
 	
 	s_arr = [];
