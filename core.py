@@ -284,6 +284,13 @@ def core(game, language, type, file, format, audio, create=False):
 				print('Cannot find path at %s! Are you sure you entered the correct game?' % main_path);
 				# add some way to input here 
 				
+				
+			
+	# Create the dialogues/ folder
+	# Confirm if it exists already or not
+	if not os.path.exists('dialogues/'):
+		 os.makedirs('dialogues')
+			
 	filename, fileExt = os.path.splitext(files[0])
 	
 	# Convert files and place them inside of dialogue folder
@@ -291,6 +298,8 @@ def core(game, language, type, file, format, audio, create=False):
 	
 	removeXLSX = True;
 	for i in range(0, len(files)):
+		# Take the file from its destination if it is not in dialogues/ and put it inside of dialogues/
+
 		g_c = games(game=game, language=language[i])
 		if fileExt != '.xlsx':
 			output_files.append(convert2(files[i], g_c))
