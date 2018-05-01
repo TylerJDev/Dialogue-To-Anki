@@ -2,9 +2,9 @@
 This is a small python project to process dialogue from games (I.e, Skyrim, Fallout 4) to Anki friendly formats
 
 #### Requirements ($ = optional)
-- B.A.E $ *(Needed if you want audio alongside of text)*
-- Unfuz $ *(Needed if you want audio alongside of text)*
-- TES5Edit $ *(Needed if language contains special characters (non-latin) i.e, Russian, Japanese, Chinese..))*
+- B.A.E $ *(If you want audio)*
+- Unfuz $ *(If you want audio)*
+- TES5Edit $ *(Needed if language contains special characters {non-latin} i.e, Russian, Japanese, Chinese..)*
 - A copy of one of the supported games
 - Creation Kit **(Only for Skyrim/Skyrim SE & Fallout 4)**
 - G.E.C.K **(Only for Fallout New Vegas)**
