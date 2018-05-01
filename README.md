@@ -1,8 +1,6 @@
 # Dialogue-To-Anki
-This is a small python project to process dialogue from games (I.e, Skyrim, Fallout 4) to Anki friendly formats (and more!)
+This is a small python project to process dialogue from games (I.e, Skyrim, Fallout 4) to Anki friendly formats
 
-# Instructions
-First you'll need the following tools
 #### Requirements ($ = optional)
 - B.A.E $ *(Needed if you want audio alongside of text)*
 - Unfuz $ *(Needed if you want audio alongside of text)*
@@ -13,8 +11,9 @@ First you'll need the following tools
 
 As above, I mentioned TES5Edit because I had problems exporting dialogue with languages with non-latin alphabets, though they may work for you, so test before you grab TES5Edit.
 
-# Step 1
-Go to your games folder (I.E, Program Files (x86)\Steam\SteamApps\common\GAME_NAME)
+# Instructions
+## Step 1
+Go to your steamapps common folder (I.E, Program Files (x86)\Steam\SteamApps\common\GAME_NAME)
 
 Next you must edit, or create specified file for the selected game below
 - **SKYRIM SPECIAL EDITION**
@@ -33,7 +32,7 @@ After it's done loading, proceed to Character > Export Dialogue
 Once the dialogue has been exported, take it and move it (preferably to Dialogue-To-Anki/dialogues), be sure to rename it!
 Rinse and repeat, do step one over but change the language to the second language you want to pair up. (*I.e, Spanish > English*)
 
-# Step 2
+## Step 2
 **Skip this step if you don't want audio, or if you already have done it previously**
 
 Just like step 1, you'll have to repeat this twice if you want audio for both languages.
@@ -53,7 +52,7 @@ Open that file up in bae and extract it.
 
 After it's done extracting, place that folder within the dialogues/audio directory, and rename 'sound' to the language you downloaded. (*Be sure to name it correctly!*)
 
-# Step 3
+## Step 3
 Before we unfuz the files, we must run this script;
 ```python core.py -g skyrim -l english spanish -t txt -f dialogues/export1.txt dialogues/export2.txt -a```
 [ADD PHOTO HERE]
@@ -73,15 +72,18 @@ Open up unfuzer and select this folder to Unfuz,
 After it's done you're all set! You can now place the audio within your Anki collection.media. Then you can import the .txt file into Anki
 [ADD PHOTO HERE]
 
-## Games Supported
+### Games Supported
 - [x] Skyrim Special Edition
 - [x] Skyrim (Vanilla)
 - [x] Fallout 4
 - [x] Fallout New Vegas
 
+### Unsupported (May work)
+ - Fallout 3
+
 More supported games coming soon!
 
-## Formats Supported
+### Formats Supported
 Formats that are currently supported or in progress
 - [x] .txt
 - [x] .csv
