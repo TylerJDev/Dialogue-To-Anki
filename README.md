@@ -4,24 +4,28 @@ This is a small python project to process dialogue from games (I.e, Skyrim, Fall
 #### Requirements ($ = optional)
 - B.A.E $ *(If you want audio)*
 - Unfuz $ *(If you want audio)*
-- TES5Edit $ *(Needed if language contains special characters {non-latin} i.e, Russian, Japanese, Chinese..)*
+- TES5Edit $ *(Needed if language contains special characters {non-latin} i.e, Russian, Japanese, Chinese, etc)*
 - A copy of one of the supported games
 - Creation Kit **(Only for Skyrim/Skyrim SE & Fallout 4)**
 - G.E.C.K **(Only for Fallout New Vegas)**
 
-As above, I mentioned TES5Edit because I had problems exporting dialogue with languages with non-latin alphabets, though they may work for you, so test before you grab TES5Edit.
+TES5Edit is optional because I had problems exporting dialogue with languages with non-latin alphabets, thought it may work for you without having to use TES5Edit.
 
 # Instructions
 ## Step 1
 Go to your steamapps common folder (I.E, Program Files (x86)\Steam\SteamApps\common\GAME_NAME)
 
-Next you must edit, or create specified file for the selected game below
+See the instructions below to see what needs to be done for the selected game;
+
 - **SKYRIM SPECIAL EDITION**
   - Since with the launch of Skyrim SE, Bethesda handled the creation kit differently. You will have to create a file named ```'CreationKitCustom.ini'``` and within add the contents 
   
 ```'[General]
  sLanguage=PUT SUPPORTED LANGUAGE HERE (i.e, spanish, russian, etc)
 ```
+- **SKYRIM (Vanilla)**
+- **FALLOUT 4**
+- **FALLOUT NEW VEGAS**
 
 Replace 'SUPPORTED LANGUAGE HERE' with the language that's supported for your selected game *(see below which languages are supported in each game)*
 
