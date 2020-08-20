@@ -1,6 +1,6 @@
 # Dialogue-To-Anki
 
-** ⚠️ Note - This project is not currently being maintained, but may be picked back up in the future! **
+**⚠️ Note - This project is not currently being maintained, but may be picked back up in the future!**
 
 Dialogue-To-Anki (DtA) converts dialogue from Bethesda games into Anki-friendly formats.
 
